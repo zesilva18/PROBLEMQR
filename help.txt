@@ -1,0 +1,39 @@
+Save line/collumn line = collum
+Save black cells per line -> lb (array N) = quantos pretos pelas linhas
+Save black cells per collumn -> cb (array N) = quantos pretos pelas colunas
+Save color transitions per line -> lt (array N) = quantas transiçoes de cor pelas linhas
+Save color transitions per collumn -> ct (array N) = quantas transições de cor pelas colunas
+Save blacks cells per quadrant -> qb (array of 4) = quantos pretos pelos quadrantes
+Save black cells per diagonal - main and antidiagonal -> db (array of 2) = quantos pretos pelas as diagonais
+
+Enconding notes:
+lines -> 1<= l <= N
+columns -> 1<= c <= N
+
+quadrant 1 if l ≤ floor(N/2) and c > floor(N/2),
+quadrant 2 if l ≤ floor(N/2) and c ≤ floor(N/2),
+quadrant 3 if l > floor(N/2) and c ≤ floor(N/2),
+quadrant 4 if l > floor(N/2) and c > floor(N/2),
+diagonal 1 (main diagonal) if l = c
+diagonal 2 (antidiagonal) if L-l+1 = c
+
+// soma de quadrantes diz o numero de blocos pretos existentes no qr code
+
+*funcao lidar com input
+*funcao decoder com 3 returns (opcoes no enunciado)
+*funcao para desenhar o qr code (fim)
+
+
+
+1 0 0
+0 0 1
+1 1 1
+
+
+Exemplo stor:
+
+linhas -> 2 2 2 2
+colunas -> 2 2 2 2
+DiffLinhas -> 3 3 3 3
+DiffColubas -> 1 1 1 1
+diagonais -> 2 2
