@@ -14,11 +14,15 @@ struct Resultado {
 
 vector<int> recebeInput(vector<int> &vec, int n){
     int numero;
+    int somaTotal = 0;
     for (int i = 0; i < n; i++)
     {
         cin >> numero;
+        somaTotal += numero;
         vec.push_back(numero);
     }
+    vec.push_back(somaTotal);
+
     return vec;
 }
 
@@ -35,7 +39,7 @@ void printArray(int array[][30], int n) {
         cout << "|";
         for (int j = 0; j < n; j++) {
             if(array[i][j] == 1){
-                cout << "X";
+                cout << "#";
             }
             if(array[i][j] == 0){
                 cout << " ";
@@ -157,7 +161,7 @@ bool verifyTrue(int array[][30], int n, vector<int> &linhas, vector<int> &coluna
 }
 
 void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants, int pretos, Resultado& res) {
-    cout <<"We are trying" << endl;
+
     if (i == n) { // encontrou uma combinação válida
         if(countNumbers1(array, n) == pretos && verifyTrue(array, n, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants) == true){
             res.n++;
@@ -184,6 +188,8 @@ int main() {
 
     int aceita = 0;
 
+
+
     int numero;
     cin >> qr;
 
@@ -193,6 +199,8 @@ int main() {
         int array[30][30] = {0}; // inicializa a matriz com zeros
         int n; //tamanho do array
         int pretos = 0;
+
+        int valida = 0;
 
         cin >> n;
 
@@ -210,32 +218,32 @@ int main() {
         recebeInput(qb, 4);
         recebeInput(db, 2);
 
-        cout << "\n";
+        pretos = lb[n];
 
-        for (int i = 0; i < 4; i++)
-        {
-            pretos = pretos + qb[i];
-        }
-
-        Resultado res;
-        res.n = aceita;
-        memcpy(res.qr, array, sizeof(res.qr));
-
-        generateArrays(n, array, 0, 0, lb, cb, db, lt, ct, qb, pretos, res);
-
-        if(res.n == 0){
+        if(cb[n] != pretos || qb[4] != pretos){ //opha isto resolveu mais casos de teste +20 pontitos
+            valida = 1;
             cout << "DEFECT: No QR Code generated!" << endl;
         }
-        else if(res.n == 1){
-            cout << "VALID: 1 QR Code generated!" << endl;
-            printArray(res.qr, n);
 
+        if (valida == 0){
+            Resultado res;
+            res.n = aceita;
+            memcpy(res.qr, array, sizeof(res.qr));
+
+            generateArrays(n, array, 0, 0, lb, cb, db, lt, ct, qb, pretos, res);
+
+            if(res.n == 0){
+                cout << "DEFECT: No QR Code generated!" << endl;
+            }
+            else if(res.n == 1){
+                cout << "VALID: 1 QR Code generated!" << endl;
+                printArray(res.qr, n);
+
+            }
+            else if(res.n > 1){
+                cout << "INVALID: " << res.n << " QR Codes generated!" << endl;
+            }
         }
-        else if(res.n > 1){
-            cout << "INVALID: " << res.n << " QR Codes generated!" << endl;
-        }
-
-
 
     }
     return 0;
