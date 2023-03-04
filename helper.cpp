@@ -2,20 +2,55 @@
 #include <fstream>
 #include <vector>
 #include <cmath>
+#include <cstring>
+
 using namespace std;
 
+//crete a struct with an int and array bidimensional
+struct Resultado {
+    int n;
+    int qr[30][30];
+};
 
-int GLOBAL = 0;
-int MAX = 30;
+vector<int> recebeInput(vector<int> &vec, int n){
+    int numero;
+    for (int i = 0; i < n; i++)
+    {
+        cin >> numero;
+        vec.push_back(numero);
+    }
+    return vec;
+}
+
 
 void printArray(int array[][30], int n) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cout << array[i][j] << " "; // imprime o array
-        }
-        cout << endl;
+
+    cout << "+";
+    for (int j = 0; j < n; j++) {
+        cout << "-";
     }
-    cout << endl;
+    cout << "+" << endl;
+
+    for (int i = 0; i < n; i++) {
+        cout << "|";
+        for (int j = 0; j < n; j++) {
+            if(array[i][j] == 1){
+                cout << "X";
+            }
+            if(array[i][j] == 0){
+                cout << " ";
+            }
+        }
+        cout << "|" << endl;
+    }
+
+    cout << "+";
+    for (int j = 0; j < n; j++) {
+        cout << "-";
+    }
+    cout << "+" << endl;
+
+
 }
 
 int countNumbers1(int array[][30], int n){
@@ -31,7 +66,7 @@ int countNumbers1(int array[][30], int n){
 
 }
 
-bool linhasColunasCheck(int array[][30], int n, vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants){
+bool verifyTrue(int array[][30], int n, vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants){
 
     int line = 0;
     int column = 0;
@@ -121,70 +156,87 @@ bool linhasColunasCheck(int array[][30], int n, vector<int> &linhas, vector<int>
     return true;
 }
 
-void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants) {
+void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants, int pretos, Resultado& res) {
+    cout <<"We are trying" << endl;
     if (i == n) { // encontrou uma combinação válida
-        if(countNumbers1(array, n) == 8 && linhasColunasCheck(array, n, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants) == true){
-            printArray(array, n); // imprime o array
-            GLOBAL++;
+        if(countNumbers1(array, n) == pretos && verifyTrue(array, n, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants) == true){
+            res.n++;
+            memcpy(res.qr, array, sizeof(res.qr));
         }
         return;
     }
     if (j == n) { // passou da última coluna, muda para a próxima linha
-        generateArrays(n, array, i+1, 0, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants);
+        generateArrays(n, array, i+1, 0, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res);
         return;
     }
     array[i][j] = 0; // tenta colocar 0 na posição (i,j)
-    generateArrays(n, array, i, j+1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants); // faz chamada recursiva para a próxima coluna
+    generateArrays(n, array, i, j+1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
     array[i][j] = 1; // tenta colocar 1 na posição (i,j)
-    generateArrays(n, array, i, j+1,linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants); // faz chamada recursiva para a próxima coluna
+    generateArrays(n, array, i, j+1,linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
 }
 
 
 int main() {
-    //AQUI TU METES AS MERDAS QUE TU QUERES TESTAR, SE QUERES UM ARRAY DE 5X5 TENS DE FAZER 5 PUSH PARA CADA MATRIZ MENOS AS DOS QUADRANTES E DAS COLUNAS
-    //O QUE TENHO FEITO E PARA O EXEMPLO 2 DO ENUNCIADO, É SO CORRERES
-    //ATENCAO LINHA 126, AQUELE 8 É O NUMERO DE 1S QUE TEM O ARRAY(CENAS PRETAS), NOS NO MAIN TEMOS UMA FUNCAO QUE CALCULA LOGO, MAS N ME APETECEU FAZER
-    //O QUE PODES TENTAR FAZER É USANDO AS FUNCOES DO PROBLEMAA, EXPRIMENTAS E VE SE BATE, SUPOSTAMENTE TEM DE BATER PQ A UNICA DIFERENCA E QUE AQUI NAO LEIO O INPUT, APENAS METO LOGO NOS VETORES CORRESPONDENTES
-    int n = 4; // tamanho do array
-    int array[30][30] = {0}; // inicializa a matriz com zeros
-    vector <int> linhas;
-    vector <int> colunas;
-    vector <int> diagonais;
-    vector <int> difflinhas;
-    vector <int> diffcolunas;
-    vector <int> quadrants;
 
-    linhas.push_back(2);
-    linhas.push_back(2);
-    linhas.push_back(2);
-    linhas.push_back(2);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int qr;
 
-    colunas.push_back(2);
-    colunas.push_back(2);
-    colunas.push_back(2);
-    colunas.push_back(2);
+    int aceita = 0;
 
-    difflinhas.push_back(3);
-    difflinhas.push_back(3);
-    difflinhas.push_back(3);
-    difflinhas.push_back(3);
+    int numero;
+    cin >> qr;
+
+    for (int i = 0; i < qr; i++) //cada qr code
+    {
+        aceita = 0;
+        int array[30][30] = {0}; // inicializa a matriz com zeros
+        int n; //tamanho do array
+        int pretos = 0;
+
+        cin >> n;
+
+        vector<int> lb;
+        vector<int> cb;
+        vector<int> lt;
+        vector<int> ct;
+        vector<int> qb;
+        vector<int> db;
+
+        recebeInput(lb, n);
+        recebeInput(cb, n);
+        recebeInput(lt, n);
+        recebeInput(ct, n);
+        recebeInput(qb, 4);
+        recebeInput(db, 2);
+
+        cout << "\n";
+
+        for (int i = 0; i < 4; i++)
+        {
+            pretos = pretos + qb[i];
+        }
+
+        Resultado res;
+        res.n = aceita;
+        memcpy(res.qr, array, sizeof(res.qr));
+
+        generateArrays(n, array, 0, 0, lb, cb, db, lt, ct, qb, pretos, res);
+
+        if(res.n == 0){
+            cout << "DEFECT: No QR Code generated!" << endl;
+        }
+        else if(res.n == 1){
+            cout << "VALID: 1 QR Code generated!" << endl;
+            printArray(res.qr, n);
+
+        }
+        else if(res.n > 1){
+            cout << "INVALID: " << res.n << " QR Codes generated!" << endl;
+        }
 
 
-    diffcolunas.push_back(1);
-    diffcolunas.push_back(1);
-    diffcolunas.push_back(1);
-    diffcolunas.push_back(1);
 
-
-    quadrants.push_back(2);
-    quadrants.push_back(2);
-    quadrants.push_back(2);
-    quadrants.push_back(2);
-
-    diagonais.push_back(2);
-    diagonais.push_back(2);
-
-    generateArrays(n, array, 0, 0, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants);
-    cout << GLOBAL << endl;
+    }
     return 0;
 }
