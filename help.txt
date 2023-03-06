@@ -37,3 +37,11 @@ colunas -> 2 2 2 2
 DiffLinhas -> 3 3 3 3
 DiffColubas -> 1 1 1 1
 diagonais -> 2 2
+
+
+linhas n n n n n ou 0 0 0 0 0...
+transl 0 0 0 0 0
+
+colunas n n n n ou 0 0 0 0 0...
+transc  0 0 0 0
+

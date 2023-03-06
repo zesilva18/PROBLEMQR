@@ -12,20 +12,6 @@ struct Resultado {
     int qr[30][30];
 };
 
-vector<int> recebeInput(vector<int> &vec, int n){
-    int numero;
-    int somaTotal = 0;
-    for (int i = 0; i < n; i++)
-    {
-        cin >> numero;
-        somaTotal += numero;
-        vec.push_back(numero);
-    }
-    vec.push_back(somaTotal);
-
-    return vec;
-}
-
 
 void printArray(int array[][30], int n) {
 
@@ -179,7 +165,6 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
     generateArrays(n, array, i, j+1,linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
 }
 
-
 int main() {
 
     ios_base::sync_with_stdio(0);
@@ -199,10 +184,17 @@ int main() {
         int array[30][30] = {0}; // inicializa a matriz com zeros
         int n; //tamanho do array
         int pretos = 0;
+        int colunas = 0;
+        int quadrantes = 0;
 
         int valida = 0;
 
         cin >> n;
+
+        if (n > 30 || n < 2)
+        {
+            valida = 1;
+        }
 
         vector<int> lb;
         vector<int> cb;
@@ -211,21 +203,103 @@ int main() {
         vector<int> qb;
         vector<int> db;
 
-        recebeInput(lb, n);
-        recebeInput(cb, n);
-        recebeInput(lt, n);
-        recebeInput(ct, n);
-        recebeInput(qb, 4);
-        recebeInput(db, 2);
+        for (int j = 0; j < n; j++) //leitura das linhas
+        {
+            cin >> numero;
+            if(numero > n || numero < 0){
+                valida = 1;
+            }
+            lb.push_back(numero);
+            pretos += numero;
+        }
 
-        pretos = lb[n];
+        for (int j = 0; j < n; j++) //leitura das colunas
+        {
+            cin >> numero;
+            if(numero > n || numero < 0){
+                valida = 1;
+            }
+            cb.push_back(numero);
+            colunas += numero;
+        }
 
-        if(cb[n] != pretos || qb[4] != pretos){ //opha isto resolveu mais casos de teste +20 pontitos
+
+        for (int j = 0; j < n; j++) //leitura das diferenças de linhas
+        {
+            cin >> numero;
+            if (numero > n - 1 || numero < 0)
+            {
+                valida = 1;
+            }
+            lt.push_back(numero);
+        }
+
+        for (int j = 0; j < n; j++) //leitura das diferenças de colunas
+        {
+            cin >> numero;
+            if (numero > n - 1 || numero < 0)
+            {
+                valida = 1;
+            }
+            ct.push_back(numero);
+        }
+
+        for (int j = 0; j < 4; j++) //leitura dos quadrantes
+        {
+            cin >> numero;
+            if( (floor(n/2+1)* floor(n/2+1)) < numero || numero < 0){
+                valida = 1;
+            }
+            qb.push_back(numero);
+            quadrantes += numero;
+        }
+
+        for (int j = 0; j < 2; j++) //leitura das diagonais
+        {
+            cin >> numero;
+            if(numero > n){
+                valida = 1;
+            }
+            db.push_back(numero);
+        }
+
+        if(quadrantes != pretos || colunas != pretos || colunas != quadrantes){ //opha isto resolveu mais casos de teste +20 pontitos
             valida = 1;
+        }
+
+        for (int j = 0; j < n; j++) //leitura das diagonais
+        {
+            if (lb[j] == n &&  cb[j] == n) //se a linha e a coluna forem todas pretas
+            {
+                valida = 1;
+            }
+
+            if (lb[j] == 0 &&  cb[j] == n) //se a linha for toda branca e a coluna toda preta
+            {
+                valida = 1;
+            }
+
+            if (lb[j] == n &&  cb[j] == 0) //se a linha for toda preta e a coluna toda branca
+            {
+                valida = 1;
+            }
+
+            if ((lb[j] == 0 || lb[j] == n) && lt[j] != 0){
+                valida = 1;
+            }
+
+            if ((cb[j] == 0 || cb[j] == n) && ct[j] != 0){
+                valida = 1;
+            }
+        }
+
+        if (valida == 1){
+
             cout << "DEFECT: No QR Code generated!" << endl;
         }
 
-        if (valida == 0){
+
+        else if (valida == 0){
             Resultado res;
             res.n = aceita;
             memcpy(res.qr, array, sizeof(res.qr));
