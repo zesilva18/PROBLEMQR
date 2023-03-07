@@ -31,13 +31,6 @@
 8 7
 
 
-
-
-
-
-
-
-
 Example output:
 VALID: 1 QR Code generated!
 +---+

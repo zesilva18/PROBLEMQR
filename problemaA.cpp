@@ -29,6 +29,9 @@ void printArray(int array[][30], int n) {
             if(array[i][j] == 0){
                 cout << " ";
             }
+            else{
+                cout << array[i][j];
+            }
         }
         cout << "|" << endl;
     }
@@ -164,6 +167,80 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
     generateArrays(n, array, i, j+1,linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
 }
 
+void preprocessamento(int n, int array[][30], vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants, int pretos, Resultado& res) {
+
+
+    for (int i = 0; i < n; i++) {
+        if(linhas[i] == 0){
+            //percorrer a linha e preencher a 0
+            for (int j = 0; j < n; j++) {
+                array[i][j] = 0;
+            }
+        }
+
+        if(linhas[i] == n){
+            //percorrer a linha e preencher a 1
+            for (int j = 0; j < n; j++) {
+                array[i][j] = 1;
+            }
+        }
+
+        if(colunas[i] == 0){
+            //percorrer a coluna e preencher a 0
+            for (int j = 0; j < n; j++) {
+                array[j][i] = 0;
+            }
+        }
+
+        if(colunas[i] == n){
+            //percorrer a coluna e preencher a 1
+            for (int j = 0; j < n; j++) {
+                array[j][i] = 1;
+            }
+        }
+
+        else{
+            //percorrer a linha e preencher a 1
+            for (int j = 0; j < n; j++) {
+                array[i][j] = -1;
+            }
+    }
+
+    if(diagonais[0] == 0){
+        //percorrer a diagonal e preencher a 0
+        for (int i = 0; i < n; i++) {
+            array[i][i] = 0;
+        }
+    }
+
+    if(diagonais[0] == n){
+        //percorrer a diagonal e preencher a 1
+        for (int i = 0; i < n; i++) {
+            array[i][i] = 1;
+        }
+    }
+    }
+
+
+    if(diagonais[1] == 0){
+        //percorrer a diagonal inversa e preencher a 0
+        for (int i = 0; i < n; i++) {
+            array[i][n-i-1] = 0;
+        }
+    }
+
+    if(diagonais[1] == n){
+        //percorrer a diagonal inversa e preencher a 1
+        for (int i = 0; i < n; i++) {
+            array[i][n-i-1] = 1;
+        }
+    }
+
+    memcpy(res.qr, array, sizeof(res.qr));
+
+
+
+}
 int main() {
 
     ios_base::sync_with_stdio(0);
@@ -171,8 +248,6 @@ int main() {
     int qr;
 
     int valid = 0;
-
-
 
     int numero;
     cin >> qr;
@@ -246,6 +321,9 @@ int main() {
         for (int j = 0; j < 4; j++) //leitura dos quadrantes
         {
             cin >> numero;
+            if( (floor(n/2+1)* floor(n/2+1)) < numero || numero < 0){
+                valida = 1;
+            }
             qb.push_back(numero);
             quadrantes += numero;
         }
@@ -253,7 +331,7 @@ int main() {
         for (int j = 0; j < 2; j++) //leitura das diagonais
         {
             cin >> numero;
-            if((floor(n/2+1)* floor(n/2+1)) < numero || numero < 0){
+            if(n < numero || numero < 0){
                 valida = 1;
             }
             db.push_back(numero);

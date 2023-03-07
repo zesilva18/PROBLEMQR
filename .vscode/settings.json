@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.pml": "promela",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "ios": "cpp"
     }
 }
