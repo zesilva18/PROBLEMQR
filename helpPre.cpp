@@ -186,6 +186,27 @@ void preprocessamento(int n, int array[][30], vector<int> &linhas, vector<int> &
         }
     }
 
+    int totalBlacks = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if(array[i][j] == 1){
+                totalBlacks++;
+            }
+        }
+    }
+
+    if(totalBlacks == pretos){
+        //put all 9's in the array to 2´s
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if(array[i][j] == 9){
+                    array[i][j] = 0;
+                }
+            }
+        }
+    }
+
+
     memcpy(res.qr, array, sizeof(res.qr));
 
 }

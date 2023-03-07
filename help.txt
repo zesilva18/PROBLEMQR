@@ -45,3 +45,15 @@ transl 0 0 0 0 0
 colunas n n n n ou 0 0 0 0 0...
 transc  0 0 0 0
 
+1 1 1 1
+1 1 1 1
+
+
+24-> 1 e 2 quadrante
+
+12 + 12 = 24 -> 1 e 2 quadrante
+
+42 -> 3 e 4 quadrante
+
+42 -> 3 e 4 quadrante
+
