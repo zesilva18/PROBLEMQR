@@ -13,6 +13,9 @@ struct Resultado
     int qr[30][30];
 };
 
+int CELLSBLACKS = 0;
+
+
 void printArray(int array[][30], int n)
 {
 
@@ -170,7 +173,7 @@ bool verifyTrue(int array[][30], int n, vector<int> &linhas, vector<int> &coluna
 
 void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants, int pretos, Resultado &res)
 {
-    
+
     if (i == n)
     { // encontrou uma combinação válida
         if (countNumbers1(array, n) == pretos && verifyTrue(array, n, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants) == true)
@@ -180,6 +183,7 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
         }
         return;
     }
+
     if (j == n)
     { // passou da última coluna, muda para a próxima linha
         generateArrays(n, array, i + 1, 0, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res);
@@ -188,16 +192,20 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
 
     if (array[i][j] == 9)
     { // se a posição (i,j) já estiver preenchida com 1, não precisa tentar colocar 0
-        array[i][j] = 0;                                                                                                 // tenta colocar 0 na posição (i,j)
-        generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
-        array[i][j] = 1;                                                                                                 // tenta colocar 1 na posição (i,j)
-        generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
-        array[i][j] = 9;                                                                                                 // volta a posição (i,j) para o valor original
+        array[i][j] = 0;                                                                                               
+        generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); 
+        array[i][j] = 1;                                                                                             
+        generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); 
+        array[i][j] = 9;
+
+        return;                                                                                              
     }
 
     else
     {
         generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
+
+        return;
     }
    
 }
@@ -347,6 +355,9 @@ void preprocessamento(int n, int array[][30], vector<int> &linhas, vector<int> &
             if(array[i][j] == 1){
                 totalBlacks++;
             }
+            if(array[i][j] == 9){
+                CELLSBLACKS++;
+            }
         }
     }
 
@@ -453,7 +464,7 @@ int main()
         for (int j = 0; j < n; j++) // leitura das diferenças de linhas
         {
             cin >> numero;
-            if (numero > n - 1 || numero < 0)
+            if (numero > lb[j] * 2 || numero < 0)
             {
                 valida = 1;
             }
@@ -463,7 +474,7 @@ int main()
         for (int j = 0; j < n; j++) // leitura das diferenças de colunas
         {
             cin >> numero;
-            if (numero > n - 1 || numero < 0)
+            if (numero > cb[j] * 2 || numero < 0)
             {
                 valida = 1;
             }
