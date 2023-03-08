@@ -170,7 +170,7 @@ bool verifyTrue(int array[][30], int n, vector<int> &linhas, vector<int> &coluna
 
 void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants, int pretos, Resultado &res)
 {
-
+    
     if (i == n)
     { // encontrou uma combinação válida
         if (countNumbers1(array, n) == pretos && verifyTrue(array, n, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants) == true)
@@ -185,10 +185,185 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
         generateArrays(n, array, i + 1, 0, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res);
         return;
     }
-    array[i][j] = 0;                                                                                                 // tenta colocar 0 na posição (i,j)
-    generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
-    array[i][j] = 1;                                                                                                 // tenta colocar 1 na posição (i,j)
-    generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
+
+    if (array[i][j] == 9)
+    { // se a posição (i,j) já estiver preenchida com 1, não precisa tentar colocar 0
+        array[i][j] = 0;                                                                                                 // tenta colocar 0 na posição (i,j)
+        generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
+        array[i][j] = 1;                                                                                                 // tenta colocar 1 na posição (i,j)
+        generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
+        array[i][j] = 9;                                                                                                 // volta a posição (i,j) para o valor original
+    }
+
+    else
+    {
+        generateArrays(n, array, i, j + 1, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res); // faz chamada recursiva para a próxima coluna
+    }
+   
+}
+
+void preprocessamento(int n, int array[][30], vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants, int pretos, Resultado& res) {
+
+    //preencher a matriz com -1
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            array[i][j] = 9;
+        }
+    }
+
+    for(int i = 0; i < 4; i++){
+        if(quadrants[i] == 0){ //preencher o quadrante correspondete com 0
+            if(i == 0){ //primeiro quadrante
+                for(int j = 0; j < floor(n/2); j++){
+                    for(int k = floor(n/2); k < n; k++){
+                        array[j][k] = 0;
+                    }
+                }
+            }
+            if(i == 1){ //segundo quadrante
+                for (int j = 0; j < floor(n/2); j++) {
+                    for (int k = 0; k < floor(n/2); k++) {
+                        array[j][k] = 0;
+                    }
+                }
+            }
+
+            if(i == 2){ //terceiro quadrante
+                for (int j = floor(n/2); j < n; j++) {
+                    for (int k = 0; k < floor(n/2); k++) {
+                        array[j][k] = 0;
+                    }
+                }
+            }
+
+            if(i == 3){ //quarto quadrante
+
+                for (int j = floor(n/2); j < n; j++) {
+                    for (int k = floor(n/2); k < n; k++) {
+                        array[j][k] = 0;
+                    }
+                }
+
+            }
+        }
+        if(quadrants[i] == (floor(n/2+1)* floor(n/2+1))){ //preencher o quadrante correspondete com 1
+
+            if(i == 0){ //primeiro quadrante
+
+                for(int j = 0; j < floor(n/2); j++){
+                    for(int k = floor(n/2); k < n; k++){
+                        array[j][k] = 1;
+                    }
+                }
+
+            }
+            if(i == 1){ //segundo quadrante
+                for (int j = 0; j < floor(n/2); j++) {
+                    for (int k = 0; k < floor(n/2); k++) {
+                        array[j][k] = 1;
+                    }
+                }
+            }
+
+            if(i == 2){ //terceiro quadrante
+                for (int j = floor(n/2); j < n; j++) {
+                    for (int k = 0; k < floor(n/2); k++) {
+                        array[j][k] = 1;
+                    }
+                }
+            }
+
+            if(i == 3){ //quarto quadrante
+                for (int j = floor(n/2); j < n; j++) {
+                    for (int k = floor(n/2); k < n; k++) {
+                        array[j][k] = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        if(linhas[i] == 0){
+            //percorrer a linha e preencher a 0
+            for (int j = 0; j < n; j++) {
+                array[i][j] = 0;
+            }
+        }
+
+        if(linhas[i] == n){
+            //percorrer a linha e preencher a 1
+            for (int j = 0; j < n; j++) {
+                array[i][j] = 1;
+            }
+        }
+
+        if(colunas[i] == 0){
+            //percorrer a coluna e preencher a 0
+            for (int j = 0; j < n; j++) {
+                array[j][i] = 0;
+            }
+        }
+
+        if(colunas[i] == n){
+            //percorrer a coluna e preencher a 1
+            for (int j = 0; j < n; j++) {
+                array[j][i] = 1;
+            }
+        }
+    }
+
+    if(diagonais[0] == 0){
+    //percorrer a diagonal e preencher a 0
+        for (int i = 0; i < n; i++) {
+            array[i][i] = 0;
+        }
+    }
+
+    if(diagonais[0] == n){ //preprocessamento da diagonal principal
+        //percorrer a diagonal e preencher a 1
+        for (int i = 0; i < n; i++) {
+            array[i][i] = 1;
+        }
+    }
+
+    if(diagonais[1] == 0){ //preprocessamento da diagonal secundaria
+        //percorrer a diagonal e preencher a 0
+        for (int i = 0; i < n; i++) {
+            array[i][n-i-1] = 0;
+        }
+    }
+
+    if(diagonais[1] == n){ //preprocessamento da diagonal secundaria
+        //percorrer a diagonal e preencher a 1
+        for (int i = 0; i < n; i++) {
+            array[i][n-i-1] = 1;
+        }
+    }
+
+    int totalBlacks = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if(array[i][j] == 1){
+                totalBlacks++;
+            }
+        }
+    }
+
+    if(totalBlacks == pretos){
+        //put all 9's in the array to 2´s
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if(array[i][j] == 9){
+                    array[i][j] = 0;
+                }
+            }
+        }
+    }
+
+
+    memcpy(res.qr, array, sizeof(res.qr));
+
 }
 
 int main()
@@ -230,8 +405,10 @@ int main()
 
         int metade1 = floor(n / 2);
 
-        int metade1_black = 0;
+        int metade_linhas = 0;
         int metade2_black = 0;
+        int metade_colunas = 0;
+        int metade2_colunas = 0;
 
         for (int j = 0; j < n; j++) // leitura das linhas
         {
@@ -245,7 +422,7 @@ int main()
 
             if (j < metade1)
             {
-                metade1_black += numero;
+                metade_linhas += numero;
             }
             else
             {
@@ -262,6 +439,15 @@ int main()
             }
             cb.push_back(numero);
             colunas += numero;
+
+            if (j < metade1)
+            {
+                metade_colunas += numero;
+            }
+            else
+            {
+                metade2_colunas += numero;
+            }
         }
 
         for (int j = 0; j < n; j++) // leitura das diferenças de linhas
@@ -286,6 +472,8 @@ int main()
 
         int sumq1 = 0;
         int sumq2 = 0;
+        int sumq3 = 0;
+        int sumq4 = 0;
 
         for (int j = 0; j < 4; j++) // leitura dos quadrantes
         {
@@ -297,7 +485,7 @@ int main()
             qb.push_back(numero);
             quadrantes += numero;
 
-            if (j < 2)//duvidoso
+            if (j < 2)
             {
                 sumq1 += numero;
             }
@@ -305,9 +493,17 @@ int main()
             {
                 sumq2 += numero;
             }
+
+            if (j == 1 || j == 2){
+                sumq3 += numero;
+            }
+
+            else{
+                sumq4 += numero;
+            }
         }
 
-        if (metade1_black != sumq1 || metade2_black != sumq2)
+        if (metade_linhas != sumq1 || metade2_black != sumq2 || sumq3 != metade_colunas || sumq4 != metade2_colunas ) //da 40 pontos
         {
             valida = 1;
         }
@@ -349,7 +545,9 @@ int main()
             {
                 valida = 1;
             }
+
         }
+
 
         if (valida == 1)
         {
@@ -361,7 +559,8 @@ int main()
         {
             Resultado res;
             res.n = aceita;
-            memcpy(res.qr, array, sizeof(res.qr));
+            
+            preprocessamento(n, array, lb, cb, db, lt, ct, qb, pretos, res);
 
             generateArrays(n, array, 0, 0, lb, cb, db, lt, ct, qb, pretos, res);
 
