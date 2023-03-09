@@ -199,11 +199,12 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
         return;
     }
 
-    Caso 3 - Se a coluna anterior tiver células pretas diferentes do suposto, não é necessário continuar a coluna
-    if(j >= 0 && contarColunasPelosVistos(array, n, j - 1) > diffcolunas[j - 1]) {
+    //Caso 3 - Se a coluna anterior tiver células pretas diferentes do suposto, não é necessário continuar a coluna
+
+    if(i > 0  && contarColunasPelosVistos(array, n, j - 1) > diffcolunas[j - 1]) {
         return;
     }
-    ver colunas amanhã com mais com calma
+    //ver colunas amanhã com mais com calma
 
 
     if (array[i][j] == 9) {  // se a posição (i,j) já estiver preenchida com 1, não precisa tentar colocar 0
