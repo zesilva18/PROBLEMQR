@@ -52,7 +52,7 @@ void printArray(int array[][30], int n) {
     cout << "+" << endl;
 }
 
-int contaLinhasPelosVistos(int array[][30], int n, int linha) { //conta transicoes, desculpe pelo nome eram 2:44 da manha
+int contaLinhasPelosVistos(int array[][30], int n, int linha) {  // conta transicoes, desculpe pelo nome eram 2:44 da manha
     int contador = 0;
 
     for (int i = 1; i < n; i++) {
@@ -64,7 +64,7 @@ int contaLinhasPelosVistos(int array[][30], int n, int linha) { //conta transico
     return contador;
 }
 
-int contarColunasPelosVistos(int array[][30], int n, int coluna) { //conta transicoes, desculpe pelo nome eram 2:44 da manha
+int contarColunasPelosVistos(int array[][30], int n, int coluna) {  // conta transicoes, desculpe pelo nome eram 2:44 da manha
     int contador = 0;
 
     for (int i = 1; i < n; i++) {
@@ -82,6 +82,97 @@ int contaLinhasMesmo(int array[][30], int n, int linha) {
     for (int i = 0; i < n; i++) {
         if (array[linha][i] == 1) {
             contador++;
+        }
+    }
+
+    return contador;
+}
+
+int contaColunasMesmo(int array[][30], int n, int coluna) {
+    int contador = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (array[i][coluna] == 1) {
+            contador++;
+        }
+    }
+
+    return contador;
+}
+
+int contaDiagonaisMesmo(int array[][30], int n) {
+    int contador = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (array[i][i] == 1) {
+            contador++;
+        }
+    }
+
+    return contador;
+}
+
+int contaDiagonaisSecundariaMesmo(int array[][30], int n) {
+    int contador = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (array[i][n - 1 - i] == 1) {
+            contador++;
+        }
+    }
+
+    return contador;
+}
+
+int ContaCoisasQ1(int array[][30], int n) {
+    int contador = 0;
+
+    for (int i = 0; i < floor(n / 2); i++) {
+        for (int j = floor(n / 2); j < n; j++) {
+            if (array[i][j] == 1) {
+                contador++;
+            }
+        }
+    }
+    return contador;
+}
+
+int ContaCoisasQ2(int array[][30], int n) {
+    int contador = 0;
+
+    for (int i = 0; i < floor(n / 2); i++) {
+        for (int j = 0; j < floor(n / 2); j++) {
+            if (array[i][j] == 1) {
+                contador++;
+            }
+        }
+    }
+
+    return contador;
+}
+
+int ContaCoisasQ3(int array[][30], int n) {
+    int contador = 0;
+
+    for (int i = floor(n / 2); i < n; i++) {
+        for (int j = 0; j < floor(n / 2); j++) {
+            if (array[i][j] == 1) {
+                contador++;
+            }
+        }
+    }
+
+    return contador;
+}
+
+int ContaCoisasQ4(int array[][30], int n) {
+    int contador = 0;
+
+    for (int i = floor(n / 2); i < n; i++) {
+        for (int j = floor(n / 2); j < n; j++) {
+            if (array[i][j] == 1) {
+                contador++;
+            }
         }
     }
 
@@ -193,19 +284,56 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
         return;
     }
 
+    // Caso 2 - Se a coluna anterior tiver células pretas diferentes do suposto, não é necessário continuar a coluna
 
-    // Caso 2 - Se a linha anterior tiver transições diferentes do suposto, não é necessário continuar a linha
+    if (i > 0 && contaColunasMesmo(array, n, j - 1) > colunas[j - 1]) {
+        return;
+    }
+
+    // Caso 3 - Se a linha anterior tiver transições diferentes do suposto, não é necessário continuar a linha
     if (i > 0 && contaLinhasPelosVistos(array, n, i - 1) != difflinhas[i - 1]) {
         return;
     }
 
-    //Caso 3 - Se a coluna anterior tiver células pretas diferentes do suposto, não é necessário continuar a coluna
+    // Caso 4 - Se a coluna anterior tiver células pretas diferentes do suposto, não é necessário continuar a coluna
 
-    if(i > 0  && contarColunasPelosVistos(array, n, j - 1) > diffcolunas[j - 1]) {
+    if (i > 0 && contarColunasPelosVistos(array, n, j - 1) > diffcolunas[j - 1]) {
         return;
     }
-    //ver colunas amanhã com mais com calma
 
+    // Caso 5 - Se a diagonal principal tiver mais celulas pretas que  o suposto, não é necessário continuar
+    if (i > 0 && contaDiagonaisMesmo(array, n) > diagonais[0]) {
+        return;
+    }
+
+    // Caso 6 - Se a diagonal secundaria tiver mais celulas pretas que  o suposto, não é necessário continuar
+    if (i > 0 && contaDiagonaisSecundariaMesmo(array, n) > diagonais[1]) {
+        return;
+    }
+
+    // Caso 7 - Se o quadrante 1 tiver mais celulas pretas que  o suposto, não é necessário continuar
+
+    if (i > 0 && ContaCoisasQ1(array, n) > quadrants[0]) {
+        return;
+    }
+
+    // Caso 8 - Se o quadrante 2 tiver mais celulas pretas que  o suposto, não é necessário continuar
+
+    if (i > 0 && ContaCoisasQ2(array, n) > quadrants[1]) {
+        return;
+    }
+
+    // Caso 9 - Se o quadrante 3 tiver mais celulas pretas que  o suposto, não é necessário continuar
+
+    if (i > 0 && ContaCoisasQ3(array, n) > quadrants[2]) {
+        return;
+    }
+
+    // Caso 10 - Se o quadrante 4 tiver mais celulas pretas que  o suposto, não é necessário continuar
+
+    if (i > 0 && ContaCoisasQ4(array, n) > quadrants[3]) {
+        return;
+    }
 
     if (array[i][j] == 9) {  // se a posição (i,j) já estiver preenchida com 1, não precisa tentar colocar 0
         array[i][j] = 1;     // tenta colocar 0 na posição (i,j)
