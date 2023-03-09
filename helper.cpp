@@ -351,12 +351,6 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
 }
 
 void preprocessamento(int n, int array[][30], vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants, int pretos, Resultado &res) {
-    // preencher a matriz com -1
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            array[i][j] = 9;
-        }
-    }
 
     for (int i = 0; i < 4; i++) {
         if (quadrants[i] == 0) {  // preencher o quadrante correspondete com 0
@@ -456,6 +450,32 @@ void preprocessamento(int n, int array[][30], vector<int> &linhas, vector<int> &
                 array[j][i] = 1;
             }
         }
+
+        if (n%2 != 0 && difflinhas[i] == n-1 && linhas[i] > n - linhas[i]){
+            
+            for (int j = 0; j < n ; j++)
+            {
+                if( j%2 ==0){
+                    array[i][j]=1;
+                }
+                else{
+                    array[i][j]=0;
+                }
+            }
+        }
+
+        if (n%2 != 0 && difflinhas[i] == n-1 && linhas[i] < n - linhas[i]){
+            
+            for (int j = 0; j < n ; j++)
+            {
+                if( j%2 ==0){
+                    array[i][j]=0;
+                }
+                else{
+                    array[i][j]=1;
+                }
+            }
+        }
     }
 
     if (diagonais[0] == 0) {
@@ -506,6 +526,46 @@ void preprocessamento(int n, int array[][30], vector<int> &linhas, vector<int> &
     }
 
     memcpy(res.qr, array, sizeof(res.qr));
+}
+
+int repeatpreprocess(int n, int array[][30], vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants, int pretos, Resultado &res) {
+
+    int UPDATES = 0;
+
+    //CASOS SIMPLES
+    int linhasBlacks = 0;
+    int colunasBlacks = 0;
+    int LinhasPretasMomento[30] = {0};  ;
+    int ColunasPretasMomento[30] = {0};
+
+    for (int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++){
+
+            if(array[i][j] == 1){
+                linhasBlacks+= 1;
+            }
+
+            if(array[j][i] == 1){
+                colunasBlacks++;
+            }
+        }
+
+        LinhasPretasMomento[i] = linhasBlacks;
+        ColunasPretasMomento[i] = colunasBlacks;
+    }
+
+    for (int i = 0; i < n; i++){
+
+        if (LinhasPretasMomento[i] == linhas[i] - 1 && ColunasPretasMomento[i] == colunas[i] - 1 && array[i][i] == 9){
+
+                array[i][i] = 1;
+                UPDATES++;
+            }
+        }
+
+    memcpy(res.qr, array, sizeof(res.qr));
+
+    return UPDATES;    
 }
 
 void contagemNextProcess(int array[][30], int n) {
@@ -762,7 +822,22 @@ int main() {
             Resultado res;
             res.n = aceita;
 
+                // preencher a matriz com -1
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    array[i][j] = 9;
+                }
+            }
+
             preprocessamento(n, array, lb, cb, db, lt, ct, qb, pretos, res);
+
+            int updates = 9;
+            int count1=0;
+            while(updates != 0 ){
+
+                updates = repeatpreprocess(n, array, lb, cb, db, lt, ct, qb, pretos, res);
+                count1++;
+            }
 
             contagemNextProcess(array, n);
 

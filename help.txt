@@ -56,3 +56,11 @@ transc  0 0 0 0
 42 -> 3 e 4 quadrante
 
 42 -> 3 e 4 quadrante
+
+linha = 2, 1 suposto ter 2
+coluna = 2, 2 suposto ter 3
+
+
+1 1 1
+0 9 1
+0 1 0
