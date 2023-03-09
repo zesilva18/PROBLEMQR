@@ -64,6 +64,18 @@ int contaLinhasPelosVistos(int array[][30], int n, int linha) { //conta transico
     return contador;
 }
 
+int contarColunasPelosVistos(int array[][30], int n, int coluna) { //conta transicoes, desculpe pelo nome eram 2:44 da manha
+    int contador = 0;
+
+    for (int i = 1; i < n; i++) {
+        if (array[i][coluna] == 0 && array[i - 1][coluna] == 1 || array[i][coluna] == 1 && array[i - 1][coluna] == 0) {
+            contador++;
+        }
+    }
+
+    return contador;
+}
+
 int contaLinhasMesmo(int array[][30], int n, int linha) {
     int contador = 0;
 
@@ -181,10 +193,18 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
         return;
     }
 
+
     // Caso 2 - Se a linha anterior tiver transições diferentes do suposto, não é necessário continuar a linha
     if (i > 0 && contaLinhasPelosVistos(array, n, i - 1) != difflinhas[i - 1]) {
         return;
     }
+
+    Caso 3 - Se a coluna anterior tiver células pretas diferentes do suposto, não é necessário continuar a coluna
+    if(j >= 0 && contarColunasPelosVistos(array, n, j - 1) > diffcolunas[j - 1]) {
+        return;
+    }
+    ver colunas amanhã com mais com calma
+
 
     if (array[i][j] == 9) {  // se a posição (i,j) já estiver preenchida com 1, não precisa tentar colocar 0
         array[i][j] = 1;     // tenta colocar 0 na posição (i,j)

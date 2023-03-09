@@ -40,3 +40,10 @@ VALID: 1 QR Code generated!
 +---+
 INVALID: 2 QR Codes generated!
 DEFECT: No QR Code generated!
+
+
+
+
+1 0 1
+1 0 1
+1 0 1
