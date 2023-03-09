@@ -52,6 +52,30 @@ void printArray(int array[][30], int n) {
     cout << "+" << endl;
 }
 
+int contaLinhasPelosVistos(int array[][30], int n, int linha) { //conta transicoes, desculpe pelo nome eram 2:44 da manha
+    int contador = 0;
+
+    for (int i = 1; i < n; i++) {
+        if (array[linha][i] == 0 && array[linha][i - 1] == 1 || array[linha][i] == 1 && array[linha][i - 1] == 0) {
+            contador++;
+        }
+    }
+
+    return contador;
+}
+
+int contaLinhasMesmo(int array[][30], int n, int linha) {
+    int contador = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (array[linha][i] == 1) {
+            contador++;
+        }
+    }
+
+    return contador;
+}
+
 bool verifyTrue(int array[][30], int n, vector<int> &linhas, vector<int> &colunas, vector<int> &diagonais, vector<int> &difflinhas, vector<int> &diffcolunas, vector<int> &quadrants) {
     int line = 0;
     int column = 0;
@@ -147,6 +171,18 @@ void generateArrays(int n, int array[][30], int i, int j, vector<int> &linhas, v
 
     if (j == n) {  // passou da última coluna, muda para a próxima linha
         generateArrays(n, array, i + 1, 0, linhas, colunas, diagonais, difflinhas, diffcolunas, quadrants, pretos, res);
+        return;
+    }
+
+    // Backtrackings (verificar casos anteriores)
+
+    // Caso 1 - Se a linha anterior tiver células pretas diferentes do suposto, não é necessário continuar a linha
+    if (i > 0 && contaLinhasMesmo(array, n, i - 1) != linhas[i - 1]) {
+        return;
+    }
+
+    // Caso 2 - Se a linha anterior tiver transições diferentes do suposto, não é necessário continuar a linha
+    if (i > 0 && contaLinhasPelosVistos(array, n, i - 1) != difflinhas[i - 1]) {
         return;
     }
 
@@ -569,68 +605,18 @@ int main() {
             }
         }
 
-        Resultado res;
-        res.n = aceita;
-
-        preprocessamento(n, array, lb, cb, db, lt, ct, qb, pretos, res);
-
-        printArray(array, n);
-
-        cout << BLACKCELLS << endl;
-
-        contagemNextProcess(array, n);
-
-        cout << "Linhas pretas:" << endl;
-
-        for (int i = 0; i < n; i++) {
-            cout << linhasPretas[i] << " ";
-        }
-
-        cout << endl;
-
-        cout << "Colunas pretas:" << endl;
-
-        for (int i = 0; i < n; i++) {
-            cout << colunasPretas[i] << " ";
-        }
-
-        cout << endl;
-
-        cout << "Diferenças de linhas:" << endl;
-
-        for (int i = 0; i < n; i++) {
-            cout << difflinhasPretas[i] << " ";
-        }
-
-        cout << endl;
-
-        cout << "Diferenças de colunas:" << endl;
-
-        for (int i = 0; i < n; i++) {
-            cout << diffcolunasPretas[i] << " ";
-        }
-
-        cout << endl;
-
-        cout << "Diagonais:";
-
-        for (int i = 0; i < 2; i++) {
-            cout << diagonaisPretas[i] << " ";
-        }
-
-        cout << "Quadrantes:" << endl;
-
-        for (int i = 0; i < 4; i++) {
-            cout << quadrantesPretas[i] << " ";
-        }
-
-        cout << endl;
-
         if (valida == 1) {
             cout << "DEFECT: No QR Code generated!" << endl;
         }
 
         else if (valida == 0) {
+            Resultado res;
+            res.n = aceita;
+
+            preprocessamento(n, array, lb, cb, db, lt, ct, qb, pretos, res);
+
+            contagemNextProcess(array, n);
+
             generateArrays(n, array, 0, 0, lb, cb, db, lt, ct, qb, pretos, res);
 
             if (res.n == 0) {
